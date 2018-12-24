@@ -1,0 +1,13 @@
+language: php
+
+php:
+  - '7.2'
+
+install:
+  - composer install
+
+script:
+  - composer validate
+  - ./vendor/bin/minus-x check . -q
+  - git status | grep "nothing to commit, working tree clean"
+  - ./vendor/bin/phpcs

@@ -1,0 +1,15 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__.'/vendor/autoload.php';
+
+use Samwilson\PhpFlickrCli\Command\AuthCommand;
+use Samwilson\PhpFlickrCli\Command\ChecksumsCommand;
+use Symfony\Component\Console\Application;
+
+$application = new Application('PhpFlickr CLI', '0.1.0');
+$application->add(new AuthCommand());
+$application->add(new ChecksumsCommand());
+//$application->add(new DownloadCommand());
+//$application->add(new UploadCommand());
+$application->run();

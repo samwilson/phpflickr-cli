@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<ruleset name="PHPCS">
+    <rule ref="PSR2"/>
+    <file>.</file>
+    <exclude-pattern>vendor/</exclude-pattern>
+    <!-- Slevomat standards; see https://github.com/slevomat/coding-standard -->
+    <config name="installed_paths" value="../../slevomat/coding-standard"/><!-- relative path from PHPCS source location -->
+</ruleset>

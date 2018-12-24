@@ -1,0 +1,25 @@
+{
+    "name": "samwilson/phpflickr-cli",
+    "description": "A command line interface for Flickr.",
+    "type": "project",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Sam Wilson",
+            "email": "sam@samwilson.id.au"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Samwilson\\PhpFlickrCli\\": "src/"
+        }
+    },
+    "require": {
+        "samwilson/phpflickr": "^4.7",
+        "slevomat/coding-standard": "^4.8",
+        "symfony/console": "^4.2",
+        "krinkle/intuition": "^1.2",
+        "symfony/yaml": "^4.2",
+        "symfony/filesystem": "^4.2"
+    }
+}
