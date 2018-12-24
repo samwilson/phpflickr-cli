@@ -22,6 +22,12 @@ Run the app:
 
     phpflickr-cli --help
 
+## Upgrading
+
+    cd /path/to/phpflickr-cli
+    git pull origin master
+    composer install --no-dev
+
 ## Authorization
 
 Just run `phpflickr-cli auth` and follow the prompts.
