@@ -4,6 +4,7 @@ namespace Samwilson\PhpFlickrCli\Command;
 
 use Exception;
 use Samwilson\PhpFlickr\PhpFlickr;
+use Samwilson\PhpFlickr\Util;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -20,7 +21,7 @@ class ChecksumsCommand extends CommandBase
         parent::configure();
         $this->setName('checksums');
         $this->setDescription('Add checksum machine tags to photos already on Flickr.');
-        $this->addOption('hash', null, InputOption::VALUE_OPTIONAL, 'The hash function to use.', 'md5');
+        $this->addOption('hash', null, InputOption::VALUE_OPTIONAL, 'The hash function to use. Either "md5" or "sha1".', 'md5');
     }
 
     /**
@@ -82,7 +83,8 @@ class ChecksumsCommand extends CommandBase
         } while ($photos['page'] !== $photos['pages']);
 
         // Clean up the temporary directory.
-        foreach (preg_grep('|^\..*|', scandir($this->tmpDir, SORT_ASC), PREG_GREP_INVERT) as $file) {
+        $tmpFiles = scandir($this->tmpDir, SORT_ASC);
+        foreach (preg_grep('|^\..*|', $tmpFiles, PREG_GREP_INVERT) as $file) {
             unlink($file);
         }
         rmdir($this->tmpDir);
@@ -99,21 +101,18 @@ class ChecksumsCommand extends CommandBase
     protected function processPhoto(InputInterface $input, PhpFlickr $flickr, $photo)
     {
         // Find the hash function.
-        $hash = $input->getOption('hash');
-        $hashFunction = $hash . '_file';
-        if (!function_exists($hashFunction)) {
-            throw new Exception("Hash function not available: $hashFunction");
-        }
+        $hashInfo = $this->getHashInfo($input);
 
         // See if the photo has already got a checksum tag.
-        preg_match("/(checksum:$hash=.*)/", $photo['tags'], $matches);
+        preg_match("/(checksum:{$hashInfo['name']}=.*)/", $photo['tags'], $matches);
         if (isset($matches[1])) {
             // If it's already got a tag, do nothing more.
             $this->io->writeln(sprintf('Already has checksum: %s', $photo['id']));
             return $matches[1];
         }
 
-        $this->io->writeln(sprintf('Adding checksum machine tag to: %s', $photo['id']));
+        $shortUrl = 'https://flic.kr/p/'.Util::base58encode($photo['id']);
+        $this->io->writeln(sprintf('Adding checksum machine tag to: %s %s', $photo['id'], $shortUrl));
 
         // Download the file.
         $photoInfo = $flickr->photos()->getInfo($photo['id']);
@@ -126,17 +125,36 @@ class ChecksumsCommand extends CommandBase
         }
 
         // Calculate the file's hash, and remove the temporary file.
-        $fileHash = $hashFunction($tmpFilename);
+        $fileHash = $hashInfo['function']($tmpFilename);
         if (file_exists($tmpFilename)) {
             unlink($tmpFilename);
         }
 
         // Upload the new tag if it's not already present.
-        $hashTag = "checksum:$hash=$fileHash";
+        $hashTag = "checksum:{$hashInfo['name']}=$fileHash";
         $tagAdded = $flickr->photos()->addTags($photo['id'], [$hashTag]);
         if (isset($tagAdded['err'])) {
             throw new Exception($tagAdded['err']['msg']);
         }
         return $hashTag;
+    }
+
+    /**
+     * Get the hash function name from the user's input.
+     * @param InputInterface $input The input object.
+     * @return string[] The names of the hash and its function (keys: 'name' and 'function').
+     * @throws Exception On an invalid hash name.
+     */
+    public function getHashInfo(InputInterface $input)
+    {
+        $hash = $input->getOption('hash');
+        if (!in_array($hash, ['md5', 'sha1'])) {
+            throw new Exception("Hash function must be either 'md5' or 'sha1'. You said: $hash");
+        }
+        $hashFunction = $hash . '_file';
+        if (!function_exists($hashFunction)) {
+            throw new Exception("Hash function not available: $hashFunction");
+        }
+        return ['name' => $hash, 'function' => $hashFunction];
     }
 }
