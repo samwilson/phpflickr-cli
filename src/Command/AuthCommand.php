@@ -1,23 +1,20 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Samwilson\PhpFlickrCli\Command;
 
-use Exception;
-use OAuth\Common\Storage\Memory;
 use OAuth\OAuth1\Token\StdOAuth1Token;
-use RuntimeException;
 use Samwilson\PhpFlickr\PhpFlickr;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
+use Throwable;
 
 final class AuthCommand extends CommandBase
 {
 
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -28,11 +25,6 @@ final class AuthCommand extends CommandBase
         $this->addOption('force', 'f', InputOption::VALUE_NONE, $msg);
     }
 
-    /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return int
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         parent::execute($input, $output);
@@ -40,7 +32,7 @@ final class AuthCommand extends CommandBase
         // Get the config file, or create one.
         try {
             $config = $this->getConfig($input);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $configFilePath = $input->getOption('config');
             $filesystem = new Filesystem();
             if ($filesystem->exists($configFilePath)) {
@@ -87,7 +79,7 @@ final class AuthCommand extends CommandBase
             // "You have successfully authorized the application XYZ to use your credentials.
             // You should now type this code into the application:"
             $question = 'Paste the 9-digit code (with or without hyphens) here:';
-            $verifier = $this->io->ask($question, null, function ($code) {
+            $verifier = $this->io->ask($question, null, static function ($code) {
                 return preg_replace('/[^0-9]/', '', $code);
             });
             $accessToken = $flickr->retrieveAccessToken($verifier);
@@ -132,4 +124,5 @@ final class AuthCommand extends CommandBase
         // to set a non-numeric key as the default. https://github.com/symfony/symfony/issues/15032
         return $this->io->choice($question, $choices);
     }
+
 }

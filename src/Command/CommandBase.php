@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Samwilson\PhpFlickrCli\Command;
 
@@ -20,7 +20,7 @@ abstract class CommandBase extends Command
     /**
      * Add the standard `--config` option that is common to all commands.
      */
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
         $desc = "Path to the config file.\n"
@@ -38,6 +38,7 @@ abstract class CommandBase extends Command
     {
         $configPath = $input->getOption('config');
         $this->io->block("Using configuration file: $configPath");
+
         return Yaml::parseFile($configPath);
     }
 
@@ -45,17 +46,14 @@ abstract class CommandBase extends Command
      * @param InputInterface $input
      * @param string[] $config
      */
-    protected function setConfig(InputInterface $input, $config)
+    protected function setConfig(InputInterface $input, array $config): void
     {
         $configPath = $input->getOption('config');
         file_put_contents($configPath, Yaml::dump($config));
         $this->io->success("Saved configuration file: $configPath");
     }
 
-    /**
-     *
-     */
-    protected function getFlickr(InputInterface $input)
+    protected function getFlickr(InputInterface $input): PhpFlickr
     {
         $config = $this->getConfig($input);
         $flickr = new PhpFlickr($config['consumer_key'], $config['consumer_secret']);
@@ -67,9 +65,11 @@ abstract class CommandBase extends Command
         return $flickr;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->io = new SymfonyStyle($input, $output);
         $this->io->title('PhpFlickr CLI');
+        return 1;
     }
+
 }

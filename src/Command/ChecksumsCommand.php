@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Samwilson\PhpFlickrCli\Command;
 
@@ -16,7 +16,7 @@ class ChecksumsCommand extends CommandBase
     /** @var string */
     protected $tmpDir;
 
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
         $this->setName('checksums');
@@ -24,18 +24,12 @@ class ChecksumsCommand extends CommandBase
         $this->addOption('hash', null, InputOption::VALUE_OPTIONAL, 'The hash function to use. Either "md5" or "sha1".', 'md5');
     }
 
-    /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return int
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         parent::execute($input, $output);
 
         // Set up the temporary directory.
         $this->tmpDir = sys_get_temp_dir().'/phpflickr-cli';
-        
         $filesystem = new Filesystem();
         if (!$filesystem->exists($this->tmpDir)) {
             $filesystem->mkdir($this->tmpDir, 0755);
@@ -47,12 +41,6 @@ class ChecksumsCommand extends CommandBase
         // Get all photos.
         $page = 1;
         do {
-            $params = [
-                'user_id' => 'me',
-                'page' => $page,
-                'per_page' => 500,
-                'extras' => 'o_url, tags',
-            ];
             $photos = $flickr->people()->getPhotos(
                 'me',
                 null,
@@ -75,8 +63,7 @@ class ChecksumsCommand extends CommandBase
                 // Process this photo.
                 $hashTag = $this->processPhoto($input, $flickr, $photo);
                 if (!$hashTag) {
-                    exit();
-                    continue;
+                    return 1;
                 }
             }
             $page++;
@@ -94,11 +81,13 @@ class ChecksumsCommand extends CommandBase
     }
 
     /**
-     * @param $photo
+     * @param InputInterface $input
+     * @param PhpFlickr $flickr
+     * @param string[] $photo
      * @return string|bool The hash machine tag, or false.
-     * @throws Exception
+     * @throws \Exception
      */
-    protected function processPhoto(InputInterface $input, PhpFlickr $flickr, $photo)
+    protected function processPhoto(InputInterface $input, PhpFlickr $flickr, array $photo)
     {
         // Find the hash function.
         $hashInfo = $this->getHashInfo($input);
@@ -141,20 +130,26 @@ class ChecksumsCommand extends CommandBase
 
     /**
      * Get the hash function name from the user's input.
-     * @param InputInterface $input The input object.
+     *
+     * @param \Symfony\Component\Console\Input\InputInterface $input The input object.
      * @return string[] The names of the hash and its function (keys: 'name' and 'function').
-     * @throws Exception On an invalid hash name.
+     * @throws \Exception On an invalid hash name.
      */
-    public function getHashInfo(InputInterface $input)
+    public function getHashInfo(InputInterface $input): array
     {
         $hash = $input->getOption('hash');
+
         if (!in_array($hash, ['md5', 'sha1'])) {
             throw new Exception("Hash function must be either 'md5' or 'sha1'. You said: $hash");
         }
+
         $hashFunction = $hash . '_file';
+
         if (!function_exists($hashFunction)) {
             throw new Exception("Hash function not available: $hashFunction");
         }
+
         return ['name' => $hash, 'function' => $hashFunction];
     }
+
 }
