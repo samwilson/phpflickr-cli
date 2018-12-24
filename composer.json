@@ -15,11 +15,14 @@
         }
     },
     "require": {
-        "samwilson/phpflickr": "^4.7",
-        "slevomat/coding-standard": "^4.8",
-        "symfony/console": "^4.2",
         "krinkle/intuition": "^1.2",
+        "samwilson/phpflickr": "^4.7",
+        "symfony/console": "^4.2",
         "symfony/yaml": "^4.2",
         "symfony/filesystem": "^4.2"
+    },
+    "require-dev": {
+        "mediawiki/minus-x": "^0.3",
+        "slevomat/coding-standard": "^4.8"
     }
 }
