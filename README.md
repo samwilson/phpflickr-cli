@@ -16,7 +16,7 @@ Get the code and install dependencies:
 
     git clone https://github.com/samwilson/phpflickr-cli
     cd phpflickr-cli
-    composer install
+    composer install --no-dev
 
 Run the app:
 

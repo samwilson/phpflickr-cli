@@ -121,7 +121,7 @@ class ChecksumsCommand extends CommandBase
         if (isset($tagAdded['err'])) {
             throw new Exception($tagAdded['err']['msg']);
         }
-        $this->io->writeln($this->msg('added-checksum', $photo['id'], $shortUrl));
+        $this->io->writeln($this->msg('added-checksum', [$photo['id'], $shortUrl]));
         return $hashTag;
     }
 
@@ -137,13 +137,13 @@ class ChecksumsCommand extends CommandBase
         $hash = $input->getOption('hash');
 
         if (!in_array($hash, ['md5', 'sha1'])) {
-            throw new Exception("Hash function must be either 'md5' or 'sha1'. You said: $hash");
+            throw new Exception($this->msg('invalid-hash', [$hash]));
         }
 
         $hashFunction = $hash . '_file';
 
         if (!function_exists($hashFunction)) {
-            throw new Exception("Hash function not available: $hashFunction");
+            throw new Exception($this->msg('hash-function-not-available', [$hashFunction]));
         }
 
         return ['name' => $hash, 'function' => $hashFunction];

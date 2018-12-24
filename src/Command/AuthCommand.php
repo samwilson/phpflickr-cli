@@ -75,7 +75,7 @@ final class AuthCommand extends CommandBase
             // Flickr says, at this point:
             // "You have successfully authorized the application XYZ to use your credentials.
             // You should now type this code into the application:"
-            $verifier = $this->io->ask($this->msg('past-code-here'), null, static function ($code) {
+            $verifier = $this->io->ask($this->msg('paste-code-here'), null, static function ($code) {
                 return preg_replace('/[^0-9]/', '', $code);
             });
             $accessToken = $flickr->retrieveAccessToken($verifier);
