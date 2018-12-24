@@ -17,12 +17,9 @@ final class AuthCommand extends CommandBase
     protected function configure(): void
     {
         parent::configure();
+        $this->setDescription($this->msg('command-auth-desc', [$this->getApplication()->getName()]));
 
-        $this->setName('auth');
-        $this->setDescription('Authorize PhpFlickr CLI to access your Flickr account.');
-
-        $msg = 'Perform authorization even if a valid token is already stored in config.php.';
-        $this->addOption('force', 'f', InputOption::VALUE_NONE, $msg);
+        $this->addOption('force', 'f', InputOption::VALUE_NONE, $this->msg('option-force-desc'));
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -41,13 +38,13 @@ final class AuthCommand extends CommandBase
                 throw $exception;
             }
             $this->io->warning($exception->getMessage());
-            $this->io->block("A config file could not be found and will now be created at $configFilePath");
+            $this->io->block($this->msg('config-will-be-created', [$configFilePath]));
 
             // If we couldn't get the config, ask for the basic config values and then try again.
             $flickrKeyUrl = 'https://www.flickr.com/services/apps/create/apply/';
-            $this->io->block("Go to $flickrKeyUrl to create a new API key, and enter its details here:");
-            $customerKey = $this->io->ask('Consumer key');
-            $customerSecret = $this->io->ask('Consumer secret');
+            $this->io->block($this->msg('go-to-flickr', [$flickrKeyUrl]));
+            $customerKey = $this->io->ask($this->msg('consumer-key'));
+            $customerSecret = $this->io->ask($this->msg('consumer-secret'));
 
             // Save the new config values.
             $config = [
@@ -71,15 +68,14 @@ final class AuthCommand extends CommandBase
         $hasToken = isset($config['access_key']) && isset($config['access_secret']);
         $hasForceOpt = $input->hasOption('force') && $input->getOption('force');
         if (!$hasToken || $hasForceOpt) {
-            $this->io->block('You need to authorize this application with Flickr.');
+            $this->io->block($this->msg('authorization-required'));
             $url = $flickr->getAuthUrl($this->getPermissionType());
-            $this->io->block("Go to this URL to authorize FlickrCLI:");
+            $this->io->block($this->msg('go-to-auth-url', [$this->getApplication()->getName()]));
             $this->io->writeln($url);
             // Flickr says, at this point:
             // "You have successfully authorized the application XYZ to use your credentials.
             // You should now type this code into the application:"
-            $question = 'Paste the 9-digit code (with or without hyphens) here:';
-            $verifier = $this->io->ask($question, null, static function ($code) {
+            $verifier = $this->io->ask($this->msg('past-code-here'), null, static function ($code) {
                 return preg_replace('/[^0-9]/', '', $code);
             });
             $accessToken = $flickr->retrieveAccessToken($verifier);
@@ -99,7 +95,7 @@ final class AuthCommand extends CommandBase
 
         // Check authorization.
         $userInfo = $flickr->test()->login();
-        $this->io->success('Logged in as '.$userInfo['username'].' (ID: '.$userInfo['id'].')');
+        $this->io->success($this->msg('logged-in-as', [$userInfo['username'], $userInfo['id']]));
 
         return 1;
     }
@@ -111,18 +107,17 @@ final class AuthCommand extends CommandBase
      */
     private function getPermissionType(): string
     {
-        $this->io->block('The permission you grant to FlickrCLI depends on what you want to do with it.');
+        $this->io->block($this->msg('permission-explanation', [$this->getApplication()->getName()]));
 
-        $question = 'Please select from the following three options';
         $choices = [
-            'read' => 'download photos',
-            'write' => 'upload or edit photos or their metadata',
-            'delete' => 'download and/or delete photos from Flickr',
+            'read' => $this->msg('choice-read'),
+            'write' => $this->msg('choice-write'),
+            'delete' => $this->msg('choice-delete'),
         ];
 
         // Note that we're not currently setting a default here, because it is not yet possible
         // to set a non-numeric key as the default. https://github.com/symfony/symfony/issues/15032
-        return $this->io->choice($question, $choices);
+        return $this->io->choice($this->msg('select-permission'), $choices);
     }
 
 }

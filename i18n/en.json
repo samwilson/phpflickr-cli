@@ -1,0 +1,31 @@
+{
+  "option-config-desc": "Path to the config file. Will default to one in the current directory.",
+  "using-config": "Using configuration file: $1",
+  "saved-config": "Saved configuration file: $1",
+
+  "command-auth-desc": "Authorize $1 to access your Flickr account.",
+  "option-force-desc": "Perform authorization even if a valid token is already stored in config.yml.",
+  "config-will-be-created": "A config file could not be found and will now be created at $1",
+  "go-to-flickr": "Go to $1 to create a new API key, and enter its details here:",
+  "consumer-key": "Consumer key",
+  "consumer-secret": "Consumer secret",
+  "authorization-required": "You need to authorize this application with your user account on Flickr.",
+  "go-to-auth-url": "Go to this URL to authorize $1:",
+  "paste-code-here": "Paste the 9-digit code (with or without hyphens) here:",
+  "permission-explanation": "The permission you grant to $1 depends on what you want to do with it.",
+  "select-permission": "Please select from the following three options",
+  "choice-read": "download photos and their metadata",
+  "choice-write": "the above, and also upload or edit photos and their metadata",
+  "choice-delete": "both of the above, and also permanently delete photos",
+  "logged-in-as": "Logged in as $1 (ID: $2)",
+  
+  "command-checksums-desc": "Add checksum machine tags to photos already on Flickr.",
+  "option-hash-desc": "The hash function to use. Either 'md5' or 'sha1'.",
+  "created-tmp-dir": "Created temporary directory: $1",
+  "deleted-tmp-dir": "Deleted temporary directory: $1",
+  "no-photos-found": "No photos found.",
+  "page-i-of-n": "Page $1 of $2",
+  "already-has-checksum": "Already has checksum: $1 $2",
+  "unable-to-download": "Unable to download: $1 $2",
+  "added-checksum": "Added checksum machine tag: $1 $2"
+}

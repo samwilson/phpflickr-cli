@@ -2,8 +2,10 @@
 
 namespace Samwilson\PhpFlickrCli\Command;
 
+use Krinkle\Intuition\Intuition;
 use OAuth\OAuth1\Token\StdOAuth1Token;
 use Samwilson\PhpFlickr\PhpFlickr;
+use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -17,17 +19,45 @@ abstract class CommandBase extends Command
     /** @var SymfonyStyle */
     protected $io;
 
+    /** @var Intuition */
+    private $intuition;
+
+    public function __construct(string $name, Application $application)
+    {
+        // Add a new parameter to the constructor so that we can set the application before configuring a command.
+        // This means we can access the Applicaiton object in self::configure().
+        $this->setApplication($application);
+        parent::__construct($name);
+    }
+
     /**
      * Add the standard `--config` option that is common to all commands.
      */
     protected function configure(): void
     {
         parent::configure();
-        $desc = "Path to the config file.\n"
-            . "Can also be set with the FLICKRCLI_CONFIG environment variable.\n"
-            . "Will default to current directory.";
+
+        // Set up i18n.
+        $this->intuition = new Intuition('phpflickr-cli');
+        $this->intuition->registerDomain( 'phpflickr-cli', dirname(__DIR__, 2).'/i18n' );
+
         $default = dirname(__DIR__, 2) .'/config.yml';
-        $this->addOption('config', 'c', InputOption::VALUE_OPTIONAL, $desc, $default);
+        $this->addOption('config', 'c', InputOption::VALUE_OPTIONAL, $this->msg('option-config-desc'), $default);
+    }
+
+    /**
+     * Get a localized message.
+     *
+     * @param string $msg The message to get.
+     * @param string[] $vars The message variables.
+     * @return string the Localized message.
+     */
+    protected function msg(string $msg, ?array $vars = []): string
+    {
+        return $this->intuition->msg($msg, [
+            'domain' => 'phpflickr-cli',
+            'variables' => $vars,
+        ]);
     }
 
     /**
@@ -37,7 +67,7 @@ abstract class CommandBase extends Command
     protected function getConfig(InputInterface $input): array
     {
         $configPath = $input->getOption('config');
-        $this->io->block("Using configuration file: $configPath");
+        $this->io->block($this->msg('using-config', [$configPath]));
 
         return Yaml::parseFile($configPath);
     }
@@ -50,7 +80,7 @@ abstract class CommandBase extends Command
     {
         $configPath = $input->getOption('config');
         file_put_contents($configPath, Yaml::dump($config));
-        $this->io->success("Saved configuration file: $configPath");
+        $this->io->success($this->msg('saved-config', [$configPath]));
     }
 
     protected function getFlickr(InputInterface $input): PhpFlickr
@@ -60,7 +90,6 @@ abstract class CommandBase extends Command
         $accessToken = new StdOAuth1Token();
         $accessToken->setAccessToken($config['access_key']);
         $accessToken->setAccessTokenSecret($config['access_secret']);
-        // A storage object has already been created at this point because we called testEcho above.
         $flickr->getOauthTokenStorage()->storeAccessToken('Flickr', $accessToken);
         return $flickr;
     }
@@ -68,7 +97,7 @@ abstract class CommandBase extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->io = new SymfonyStyle($input, $output);
-        $this->io->title('PhpFlickr CLI');
+        $this->io->title($this->getApplication()->getLongVersion());
         return 1;
     }
 

@@ -19,9 +19,8 @@ class ChecksumsCommand extends CommandBase
     protected function configure(): void
     {
         parent::configure();
-        $this->setName('checksums');
-        $this->setDescription('Add checksum machine tags to photos already on Flickr.');
-        $this->addOption('hash', null, InputOption::VALUE_OPTIONAL, 'The hash function to use. Either "md5" or "sha1".', 'md5');
+        $this->setDescription($this->msg('command-checksums-desc'));
+        $this->addOption('hash', null, InputOption::VALUE_OPTIONAL, $this->msg('option-hash-desc'), 'md5');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -33,7 +32,7 @@ class ChecksumsCommand extends CommandBase
         $filesystem = new Filesystem();
         if (!$filesystem->exists($this->tmpDir)) {
             $filesystem->mkdir($this->tmpDir, 0755);
-            $this->io->success("Created temp directory: $this->tmpDir");
+            $this->io->success($this->msg('created-tmp-dir', [$this->tmpDir]));
         }
 
         $flickr = $this->getFlickr($input);
@@ -55,10 +54,10 @@ class ChecksumsCommand extends CommandBase
                 $page
             );
             if (0 === $photos['pages']) {
-                $this->io->warning('No photos found.');
+                $this->io->warning($this->msg('no-photos-found'));
                 return 0;
             }
-            $this->io->writeln("Page $page of " . $photos['pages']);
+            $this->io->writeln($this->msg('page-i-of-n', [$page, $photos['pages']]));
             foreach ($photos['photo'] as $photo) {
                 // Process this photo.
                 $hashTag = $this->processPhoto($input, $flickr, $photo);
@@ -75,7 +74,7 @@ class ChecksumsCommand extends CommandBase
             unlink($file);
         }
         rmdir($this->tmpDir);
-        $this->io->success("Deleted temp directory: $this->tmpDir");
+        $this->io->success($this->msg('deleted-tmp-dir', [$this->tmpDir]));
 
         return 0;
     }
@@ -89,19 +88,16 @@ class ChecksumsCommand extends CommandBase
      */
     protected function processPhoto(InputInterface $input, PhpFlickr $flickr, array $photo)
     {
-        // Find the hash function.
         $hashInfo = $this->getHashInfo($input);
+        $shortUrl = 'https://flic.kr/p/'.Util::base58encode($photo['id']);
 
         // See if the photo has already got a checksum tag.
         preg_match("/(checksum:{$hashInfo['name']}=.*)/", $photo['tags'], $matches);
         if (isset($matches[1])) {
             // If it's already got a tag, do nothing more.
-            $this->io->writeln(sprintf('Already has checksum: %s', $photo['id']));
+            $this->io->writeln($this->msg('already-has-checksum', [$photo['id'], $shortUrl]));
             return $matches[1];
         }
-
-        $shortUrl = 'https://flic.kr/p/'.Util::base58encode($photo['id']);
-        $this->io->writeln(sprintf('Adding checksum machine tag to: %s %s', $photo['id'], $shortUrl));
 
         // Download the file.
         $photoInfo = $flickr->photos()->getInfo($photo['id']);
@@ -109,7 +105,7 @@ class ChecksumsCommand extends CommandBase
         $tmpFilename = $this->tmpDir.'/checksumming.'.$photoInfo['originalformat'];
         $downloaded = copy($originalUrl, $tmpFilename);
         if (false === $downloaded) {
-            $this->io->error(sprintf('Unable to download: %s', $photo['id']));
+            $this->io->error($this->msg('unable-to-download', [$photo['id'], $shortUrl]));
             return false;
         }
 
@@ -125,6 +121,7 @@ class ChecksumsCommand extends CommandBase
         if (isset($tagAdded['err'])) {
             throw new Exception($tagAdded['err']['msg']);
         }
+        $this->io->writeln($this->msg('added-checksum', $photo['id'], $shortUrl));
         return $hashTag;
     }
 
