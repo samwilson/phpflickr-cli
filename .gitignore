@@ -1,6 +1,8 @@
 /vendor/
 /config.yml
 /config.yaml
+/tests/tmp/
+/photos/
 
-/.idea
+/.idea/
 

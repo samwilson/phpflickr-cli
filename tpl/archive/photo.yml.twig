@@ -1,0 +1,10 @@
+id: {{id}}
+date_taken: {{dates.taken}}
+date_taken_granularity: {{dates.takengranularity}}
+date_taken_formatted: {{flickrDate(dates.taken, dates.takengranularity)}}
+title: {{title}}
+description: {{descritpion}}
+tags:
+    {% for tag in tags.tag %}
+    - {{tag.raw}}
+    {% endfor %}
