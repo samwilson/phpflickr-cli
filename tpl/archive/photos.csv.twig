@@ -1,0 +1,4 @@
+id,date_taken,title
+{% for photo in photos %}
+{{photo.id}},{{photo.dates.taken}},{{photo.title}}
+{% endfor %}

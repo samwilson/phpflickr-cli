@@ -16,5 +16,7 @@
         <exclude name="SlevomatCodingStandard.ControlStructures.DisallowYodaComparison.DisallowedYodaComparison" />
         <exclude name="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalConstants" />
         <exclude name="SlevomatCodingStandard.Operators.DisallowIncrementAndDecrementOperators" />
+        <exclude name="SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter" />
+        <exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.UselessDocComment" />
     </rule>
 </ruleset>

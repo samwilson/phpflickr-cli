@@ -33,6 +33,19 @@ Run the app:
 Just run `phpflickr-cli auth` and follow the prompts.
 This will create a `config.yml` file containing your access codes; keep it safe.
 
+## Downloading
+
+To download photos, specify where you want them to end up and a template:
+
+    phpflickr-cli download --dest=<path> --template=<template_name>
+
+Download templates are sets of Twig template files,
+one for each of the following purposes:
+each photo;
+the path to each photo;
+and all photos (ordered by the path).
+Have a look at the included templates for more ideas on what they can do.
+
 ## Checksums
 
 Add MD5 or SHA1 checksum machine tags to images:

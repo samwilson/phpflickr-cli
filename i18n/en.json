@@ -29,5 +29,17 @@
   "page-i-of-n": "Page $1 of $2",
   "already-has-checksum": "Already has checksum: $1 $2",
   "unable-to-download": "Unable to download: $1 $2",
-  "added-checksum": "Added checksum machine tag: $1 $2"
+  "added-checksum": "Added checksum machine tag: $1 $2",
+
+  "command-download-desc": "Download photos and compile metadata files according to a template.",
+  "option-dest-desc": "The directory to download files to. Will be created if it doesn't exist.",
+  "option-template-desc": "The template to use for the downloaded files. One of: $1",
+  "option-userid-desc": "The ID of the user who's photos to return. The default value of 'me' will return the authorized user's photos.",
+  "option-min-upload-date-desc": "Only download photos uploaded on or after this date-time. Use ISO8601 date format.",
+  "option-max-upload-date-desc": "Only download photos uploaded on or before this date-time. Use ISO8601 date format.",
+  "option-min-date-taken-desc": "Only download photos taken on or after this date-time. Use ISO8601 date format.",
+  "option-max-date-taken-desc": "Only download photos taken on or before this date-time. Use ISO8601 date format.",
+  "option-privacy-desc": "When downloading your own photos, restrict to only: 1 = public; 2 = friends; 3 = family; 4 = friends & family; 5 = private.",
+  "compiling-output-files": "Compiling output files.",
+  "downloaded-saved-to": "Photos downloaded to: $1"
 }

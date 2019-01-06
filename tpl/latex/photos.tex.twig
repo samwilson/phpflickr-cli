@@ -1,0 +1,60 @@
+\documentclass{book}
+\usepackage[paperwidth=20.955cm, paperheight=27.31cm]{geometry}
+\usepackage{grffile}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage[utf8]{inputenc}
+\usepackage{float}
+
+\usepackage{hyperref}
+\hypersetup{
+colorlinks = true,  % Colours links instead of ugly boxes
+urlcolor   = black,  % Colour for external hyperlinks
+linkcolor  = black, % Colour of internal links
+citecolor  = black  % Colour of citations
+}
+
+\usepackage{chngcntr}
+\counterwithout{figure}{chapter}
+
+\usepackage{makeidx}
+\makeindex
+
+\usepackage{figsize}
+\usepackage[margin=10pt,font=small,labelfont=bf,labelsep=period]{caption}
+\renewcommand{\figurename}{}
+\SetFigLayout[3]{2}{1}
+\renewcommand{\listfigurename}{Contents}
+\title{ {{title}} }
+\date{}
+\begin{document}
+\maketitle
+\frontmatter
+\listoffigures
+\mainmatter
+\chapter{Photographs}
+
+{% for photo in photos %}
+\begin{figure}
+    \begin{center}
+        \includegraphics{{'{'}}{{photo.dates.taken|date('Y-m-d_Hi')}}_{{photo.id}}.{{photo.ext}}{{'}'}}
+        \caption[{{flickrDate(photo.dates.taken, photo.dates.takengranularity)}}: {{photo.title|e('tex')}}]{
+            {{flickrDate(photo.dates.taken, photo.dates.takengranularity)}}: \textbf{ {{photo.title|e('tex')}} }
+            {{ photo.description|e('tex') }}
+            {% for tag in photo.tags.tag if not tag.machine_tag %}
+                {\small \index{ {{tag.raw|e('tex')}} } \textsc{ {{tag.raw|e('tex')}} } }
+            {% endfor %}
+            \hfill {\tiny \href{{'{'}}{{photo.shorturl}}{{'}{'}}{{photo.id}}{{'}'}} }
+        }
+    \end{center}
+\end{figure}
+
+{% if loop.index % 12 == 0 %}
+    \clearpage
+{% endif %}
+
+{% endfor %}
+
+\printindex
+
+\end{document}
