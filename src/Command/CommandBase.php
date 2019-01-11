@@ -31,7 +31,7 @@ abstract class CommandBase extends Command
     }
 
     /**
-     * Add the standard `--config` option that is common to all commands.
+     * Add the standard things that are common to all commands.
      */
     protected function configure(): void
     {
@@ -41,7 +41,13 @@ abstract class CommandBase extends Command
         $this->intuition = new Intuition('phpflickr-cli');
         $this->intuition->registerDomain( 'phpflickr-cli', dirname(__DIR__, 2).'/i18n' );
 
-        $default = dirname(__DIR__, 2) .'/config.yml';
+        // Use the current working directory for the config file,
+        // but that can on some systems so we fall back to the script's directory.
+        $configDir = getcwd();
+        if (false === $configDir) {
+            $configDir = dirname(__DIR__, 2);
+        }
+        $default =  rtrim($configDir, DIRECTORY_SEPARATOR).'/config.yml';
         $this->addOption('config', 'c', InputOption::VALUE_OPTIONAL, $this->msg('option-config-desc'), $default);
     }
 

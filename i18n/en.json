@@ -5,6 +5,7 @@
 
   "command-auth-desc": "Authorize $1 to access your Flickr account.",
   "option-force-desc": "Perform authorization even if a valid token is already stored in config.yml.",
+  "no-consumer-key-in-config": "No API key information was found in the config file. Please delete the file and start again (or open it and see if you can fix what's wrong).",
   "config-will-be-created": "A config file could not be found and will now be created at $1",
   "go-to-flickr": "Go to $1 to create a new non-commercial API key (you can give it whatever name you like), and enter its details here:",
   "consumer-key": "API key",
@@ -18,7 +19,7 @@
   "choice-write": "the above, and also upload or edit photos and their metadata",
   "choice-delete": "both of the above, and also permanently delete photos",
   "logged-in-as": "Logged in as $1 (ID: $2)",
-  
+
   "command-checksums-desc": "Add checksum machine tags to photos already on Flickr.",
   "option-hash-desc": "The hash function to use. Either 'md5' or 'sha1'.",
   "invalid-hash": "Hash function must be either 'md5' or 'sha1'. You said: $1",
