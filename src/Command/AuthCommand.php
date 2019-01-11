@@ -59,6 +59,12 @@ final class AuthCommand extends CommandBase
             $config = $this->getConfig($input);
         }
 
+        // Make sure the consumer key is in the config file.
+        if (!isset($config['consumer_key']) || !isset($config['consumer_secret'])) {
+            $this->io->error($this->msg('no-consumer-key-in-config'));
+            return 1;
+        }
+
         $flickr = new PhpFlickr($config['consumer_key'], $config['consumer_secret']);
 
         // Check connection, just to make sure the consumer key is correct. We don't care about the return value;
@@ -105,7 +111,7 @@ final class AuthCommand extends CommandBase
      *
      * @return string The permission, one of 'read', write', or 'delete'. Defaults to 'read'.
      */
-    private function getPermissionType(): string
+    protected function getPermissionType(): string
     {
         $this->io->block($this->msg('permission-explanation', [$this->getApplication()->getName()]));
 
