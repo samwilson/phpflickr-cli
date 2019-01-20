@@ -5,11 +5,13 @@ require_once __DIR__.'/vendor/autoload.php';
 
 use Samwilson\PhpFlickrCli\Command\AuthCommand;
 use Samwilson\PhpFlickrCli\Command\ChecksumsCommand;
-use Samwilson\PhpFlickrCli\Command\DownloadCommand;
+use Samwilson\PhpFlickrCli\Command\DownloadAlbumCommand;
+use Samwilson\PhpFlickrCli\Command\DownloadUserCommand;
 use Samwilson\PhpFlickrCli\PhpFlickrCli;
 
 $application = new PhpFlickrCli();
 $application->add(new AuthCommand('auth', $application));
 $application->add(new ChecksumsCommand('checksums', $application));
-$application->add(new DownloadCommand('download', $application));
+$application->add(new DownloadUserCommand('download:user', $application));
+$application->add(new DownloadAlbumCommand('download:album', $application));
 $application->run();
