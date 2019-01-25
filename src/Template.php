@@ -32,13 +32,23 @@ class Template {
     protected $callback;
 
     /** @var string */
-    protected $templatDirectory;
+    protected $templateDirectory;
 
     public function __construct(string $templateName, string $destDir, PhpFlickr $flickr)
     {
         $this->flickr = $flickr;
-        $this->templateName = $templateName;
-        $this->templateDirectory = dirname(__DIR__)."/tpl/".$this->templateName;
+
+        // The provided template name might be a template directory, either relative to the current working directory or
+        // an absolute path. Only if it's neither of these, do we assume it's one of the included templates.
+        if (is_dir($templateName)) {
+            $this->templateName = basename($templateName);
+            $this->templateDirectory = $templateName;
+        } else {
+            $this->templateName = $templateName;
+            $this->templateDirectory = dirname(__DIR__)."/tpl/".$this->templateName;
+        }
+
+        // Set up Twig. If the template doesn't exist, FilesystemLoader will complain for us.
         $this->twig = new Environment(new FilesystemLoader($this->templateDirectory));
         $this->dest = rtrim($destDir, '/');
         if (!is_dir($this->dest)) {
@@ -88,7 +98,7 @@ class Template {
     }
 
     /**
-     * Get a list of the names of all available templates.
+     * Get a list of the names of all included templates.
      *
      * @return string[]
      */
