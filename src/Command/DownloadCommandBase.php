@@ -32,9 +32,14 @@ abstract class DownloadCommandBase extends CommandBase
 	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
 		parent::execute($input, $output);
+        $flickr = $this->getFlickr($input);
+
+        // Create the template early, to validate inputs.
+        $dest = $input->getOption('dest');
+        $templateName = $input->getOption('template');
+        $template = new Template($templateName, $dest, $flickr);
 
 		// Get photos.
-		$flickr = $this->getFlickr($input);
 		$page = 1;
 		$allPhotos = [];
 		$this->io->block($this->msg('retrieving-photo-metadata'));
@@ -56,8 +61,6 @@ abstract class DownloadCommandBase extends CommandBase
 		$progressBar1->finish();
 
 		$this->io->block($this->msg('compiling-output-files'));
-		$dest = $input->getOption('dest');
-		$template = new Template($input->getOption('template'), $dest, $flickr);
 
 		$progressBar2 = new ProgressBar($this->io, (int)$photos['total']);
 		$progressBar2->start();
