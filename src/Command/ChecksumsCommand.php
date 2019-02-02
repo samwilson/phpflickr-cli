@@ -19,7 +19,7 @@ class ChecksumsCommand extends CommandBase
     protected function configure(): void
     {
         parent::configure();
-        $this->setDescription($this->msg('command-checksums-desc'));
+        $this->setDescription($this->msg('command-duplicates-checksums-desc'));
         $this->addOption('hash', null, InputOption::VALUE_OPTIONAL, $this->msg('option-hash-desc'), 'md5');
     }
 

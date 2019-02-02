@@ -164,16 +164,16 @@
         },
         {
             "name": "samwilson/phpflickr",
-            "version": "4.8.0",
+            "version": "4.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/samwilson/phpflickr.git",
-                "reference": "6dcc438b8a9aad4766a61bf9df2dc671382ebe79"
+                "reference": "aae579db0aec65ad2255226cb3e780feaeeeafa3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/samwilson/phpflickr/zipball/6dcc438b8a9aad4766a61bf9df2dc671382ebe79",
-                "reference": "6dcc438b8a9aad4766a61bf9df2dc671382ebe79",
+                "url": "https://api.github.com/repos/samwilson/phpflickr/zipball/aae579db0aec65ad2255226cb3e780feaeeeafa3",
+                "reference": "aae579db0aec65ad2255226cb3e780feaeeeafa3",
                 "shasum": ""
             },
             "require": {
@@ -202,7 +202,7 @@
                 "GPL-3.0-or-later"
             ],
             "description": "A PHP wrapper for the Flickr API, including Oauth.",
-            "time": "2019-01-20T01:25:59+00:00"
+            "time": "2019-02-01T19:47:39+00:00"
         },
         {
             "name": "symfony/console",
@@ -1352,16 +1352,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "6.5.13",
+            "version": "6.5.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "0973426fb012359b2f18d3bd1e90ef1172839693"
+                "reference": "bac23fe7ff13dbdb461481f706f0e9fe746334b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/0973426fb012359b2f18d3bd1e90ef1172839693",
-                "reference": "0973426fb012359b2f18d3bd1e90ef1172839693",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/bac23fe7ff13dbdb461481f706f0e9fe746334b7",
+                "reference": "bac23fe7ff13dbdb461481f706f0e9fe746334b7",
                 "shasum": ""
             },
             "require": {
@@ -1432,7 +1432,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-09-08T15:10:43+00:00"
+            "time": "2019-02-01T05:22:47+00:00"
         },
         {
             "name": "phpunit/phpunit-mock-objects",

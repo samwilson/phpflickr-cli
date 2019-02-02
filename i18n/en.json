@@ -46,5 +46,10 @@
   "downloaded-saved-to": "Photos downloaded to: $1",
 
   "command-download-album-desc": "Download an album's photos and compile metadata files according to a template.",
-  "option-album-desc": "The ID of the album to download. Get it from the URL of the album page on Flickr."
+  "option-album-desc": "The ID of the album to download. Get it from the URL of the album page on Flickr.",
+
+  "command-duplicates-desc": "Find duplicates based on photos checksums (using any available hash). Run the 'checksums' command before this one for best results.",
+  "searching-for-duplicates": "Searching for duplicates...",
+  "no-checksum": "No checksum tag found on $1",
+  "ask-delete-duplicate": "Which photo do you want to delete?"
 }
