@@ -6,7 +6,7 @@ use Symfony\Component\Console\Application;
 
 class PhpFlickrCli extends Application {
 
-    public function __construct(string $name = 'PhpFlickr CLI', string $version = '0.1.0') {
+    public function __construct(string $name = 'PhpFlickr CLI', string $version = '0.2.1') {
         parent::__construct($name, $version);
     }
 
