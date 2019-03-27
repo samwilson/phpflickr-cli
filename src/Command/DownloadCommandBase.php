@@ -32,26 +32,29 @@ abstract class DownloadCommandBase extends CommandBase
 	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
 		parent::execute($input, $output);
-        $flickr = $this->getFlickr($input);
+		$flickr = $this->getFlickr($input);
 
-        // Create the template early, to validate inputs.
-        $dest = $input->getOption('dest');
-        $templateName = $input->getOption('template');
-        $template = new Template($templateName, $dest, $flickr);
+		// Create the template early, to validate inputs.
+		$dest = $input->getOption('dest');
+		$templateName = $input->getOption('template');
+		$template = new Template($templateName, $dest, $flickr);
 
 		// Get photos.
 		$page = 1;
 		$allPhotos = [];
 		$this->io->block($this->msg('retrieving-photo-metadata'));
+		$progressBar1 = new ProgressBar($this->io);
+		$progressBar1->start();
 		do {
 			$photos = $this->getPhotos($flickr, $input, $page);
+			$page++;
 			if (0 === (int)$photos['total']) {
 				$this->io->warning($this->msg('no-photos-found'));
 				return 0;
 			}
-
-			$progressBar1 = new ProgressBar($this->io, (int)$photos['total']);
-			$progressBar1->start();
+			if (!$progressBar1->getMaxSteps()) {
+				$progressBar1->setMaxSteps((int)$photos['total']);
+			}
 
 			foreach ($photos['photo'] as $photo) {
 				$allPhotos[] = $flickr->photos()->getInfo($photo['id']);
