@@ -41,8 +41,8 @@
   "option-min-date-taken-desc": "Only download photos taken on or after this date-time. Use ISO8601 date format.",
   "option-max-date-taken-desc": "Only download photos taken on or before this date-time. Use ISO8601 date format.",
   "option-privacy-desc": "When downloading your own photos, restrict to only: 1 = public; 2 = friends; 3 = family; 4 = friends & family; 5 = private.",
-  "retrieving-photo-metadata": "Retrieving photo metadata",
-  "compiling-output-files": "Compiling output files.",
+  "retrieving-photo-metadata": "Retrieving photo metadata:",
+  "compiling-output-files": "Compiling output files:",
   "downloaded-saved-to": "Photos downloaded to: $1",
 
   "command-download-album-desc": "Download an album's photos and compile metadata files according to a template.",
