@@ -15,7 +15,7 @@
         }
     },
     "require": {
-        "krinkle/intuition": "^1.2",
+        "krinkle/intuition": "^2.0",
         "samwilson/phpflickr": "^4.7",
         "symfony/console": "^4.2",
         "symfony/yaml": "^4.2",
