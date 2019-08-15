@@ -25,6 +25,6 @@
     "require-dev": {
         "mediawiki/minus-x": "^0.3",
         "phpunit/phpunit": "^6.5",
-        "slevomat/coding-standard": "^4.8"
+        "slevomat/coding-standard": "^5.0"
     }
 }
