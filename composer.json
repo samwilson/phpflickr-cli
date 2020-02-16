@@ -17,14 +17,15 @@
     "require": {
         "krinkle/intuition": "^1.2",
         "samwilson/phpflickr": "^4.7",
-        "symfony/console": "^4.2",
-        "symfony/yaml": "^4.2",
-        "symfony/filesystem": "^4.2",
+        "symfony/console": "^4.2|^5.0",
+        "symfony/yaml": "^4.2|^5.0",
+        "symfony/filesystem": "^4.2|^5.0",
         "twig/twig": "^2.6"
     },
     "require-dev": {
         "mediawiki/minus-x": "^0.3",
         "phpunit/phpunit": "^6.5",
-        "slevomat/coding-standard": "^4.8"
+        "slevomat/coding-standard": "^4.8",
+        "symfony/var-dumper": "^5.0"
     }
 }
