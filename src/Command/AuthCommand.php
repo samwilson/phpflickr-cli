@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Samwilson\PhpFlickrCli\Command;
 
@@ -13,10 +15,10 @@ use Throwable;
 
 final class AuthCommand extends CommandBase
 {
-
     protected function configure(): void
     {
         parent::configure();
+
         $this->setDescription($this->msg('command-auth-desc', [$this->getApplication()->getName()]));
 
         $this->addOption('force', 'f', InputOption::VALUE_NONE, $this->msg('option-force-desc'));
@@ -32,11 +34,13 @@ final class AuthCommand extends CommandBase
         } catch (Throwable $exception) {
             $configFilePath = $input->getOption('config');
             $filesystem = new Filesystem();
+
             if ($filesystem->exists($configFilePath)) {
                 // If the file does actually exist, it's probably a parse error,
                 // but whatever it is we don't want to overwrite it so we bail out here.
                 throw $exception;
             }
+
             $this->io->warning($exception->getMessage());
             $this->io->block($this->msg('config-will-be-created', [$configFilePath]));
 
@@ -62,6 +66,7 @@ final class AuthCommand extends CommandBase
         // Make sure the consumer key is in the config file.
         if (!isset($config['consumer_key']) || !isset($config['consumer_secret'])) {
             $this->io->error($this->msg('no-consumer-key-in-config'));
+
             return 1;
         }
 
@@ -73,6 +78,7 @@ final class AuthCommand extends CommandBase
 
         $hasToken = isset($config['access_key']) && isset($config['access_secret']);
         $hasForceOpt = $input->hasOption('force') && $input->getOption('force');
+
         if (!$hasToken || $hasForceOpt) {
             $this->io->block($this->msg('authorization-required'));
             $url = $flickr->getAuthUrl($this->getPermissionType());
@@ -125,5 +131,4 @@ final class AuthCommand extends CommandBase
         // to set a non-numeric key as the default. https://github.com/symfony/symfony/issues/15032
         return $this->io->choice($this->msg('select-permission'), $choices);
     }
-
 }

@@ -1,12 +1,17 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
+
+namespace Samwilson\PhpFlickrCli\Test;
 
 use PHPUnit\Framework\TestCase;
 use Samwilson\PhpFlickr\PhpFlickr;
 use Samwilson\PhpFlickrCli\Template;
+use Symfony\Component\Filesystem\Filesystem;
 
-class TemplateTest extends TestCase {
-
-    /** @var \Symfony\Component\Filesystem\Filesystem */
+class TemplateTest extends TestCase
+{
+    /** @var Filesystem */
     protected $fs;
 
     /** @var string */
@@ -17,14 +22,13 @@ class TemplateTest extends TestCase {
 
     /**
      * Create temp directory and set up some test data.
-     *
-     * @return void
      */
-    public function setUp(): void
+    public function setUp() : void
     {
         parent::setUp();
-        $this->fs = new Symfony\Component\Filesystem\Filesystem();
-        $this->tmpDir = __DIR__.'/tmp';
+
+        $this->fs = new Filesystem();
+        $this->tmpDir = __DIR__ . '/tmp';
         $this->fs->mkdir($this->tmpDir);
         $this->testPhotoInfo = [
             'b_photo' => [
@@ -56,29 +60,33 @@ class TemplateTest extends TestCase {
 
     /**
      * Remove the temp directory.
-     *
-     * @return void
      */
-    public function tearDown(): void
+    public function tearDown() : void
     {
-        $this->fs->remove(__DIR__.'/tmp');
+        $this->fs->remove(__DIR__ . '/tmp');
+
         parent::tearDown();
     }
 
     /**
      * @covers \Samwilson\PhpFlickrCli\Template::render
-     * @return void
      */
-    public function testCreation(): void
+    public function testCreation() : void
     {
         $tpl = new Template('archive', $this->tmpDir, new PhpFlickr('', ''));
         $tpl->render($this->testPhotoInfo);
-        static::assertFileExists($this->tmpDir.'/photos.csv');
+        static::assertFileExists($this->tmpDir . '/photos.csv');
         static::assertEquals(
-            "id,date_taken,title\n456,2018-12-01 01:12:00,Foobar\n123,2019-01-01 13:45:00,Lorem ipsum\n", file_get_contents($this->tmpDir.'/photos.csv')
+            "id,date_taken,title\n456,2018-12-01 01:12:00,Foobar\n123,2019-01-01 13:45:00,Lorem ipsum\n",
+            file_get_contents($this->tmpDir . '/photos.csv')
         );
-        static::assertEquals("id: 123\ndate_taken: 2019-01-01 13:45:00\ntitle: Lorem ipsum\n", file_get_contents($this->tmpDir.'/20/2c/123.yml'));
-        static::assertEquals("id: 456\ndate_taken: 2018-12-01 01:12:00\ntitle: Foobar\n", file_get_contents($this->tmpDir.'/25/0c/456.yml'));
+        static::assertEquals(
+            "id: 123\ndate_taken: 2019-01-01 13:45:00\ntitle: Lorem ipsum\n",
+            file_get_contents($this->tmpDir . '/20/2c/123.yml')
+        );
+        static::assertEquals(
+            "id: 456\ndate_taken: 2018-12-01 01:12:00\ntitle: Foobar\n",
+            file_get_contents($this->tmpDir . '/25/0c/456.yml')
+        );
     }
-
 }

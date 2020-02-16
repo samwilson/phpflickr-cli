@@ -7,8 +7,10 @@ This is a command-line interface (CLI) to Flickr, written in PHP.
 
 Features:
 
-* Internationalization.
+* Upload photos.
+* Download photos by album or user.
 * Add checksum machine tags (MD5 or SHA1).
+* Internationalization.
 
 ## Installation
 
