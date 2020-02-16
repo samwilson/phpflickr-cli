@@ -2,6 +2,7 @@
 
 namespace Samwilson\PhpFlickrCli\Command;
 
+use Exception;
 use Krinkle\Intuition\Intuition;
 use OAuth\OAuth1\Token\StdOAuth1Token;
 use Samwilson\PhpFlickr\PhpFlickr;
@@ -21,6 +22,9 @@ abstract class CommandBase extends Command
 
     /** @var Intuition */
     private $intuition;
+
+    /** @var PhpFlickr */
+    protected $flickr;
 
     public function __construct(string $name, Application $application)
     {
@@ -91,13 +95,17 @@ abstract class CommandBase extends Command
 
     protected function getFlickr(InputInterface $input): PhpFlickr
     {
+    	if ($this->flickr instanceof PhpFlickr) {
+    		return $this->flickr;
+		}
         $config = $this->getConfig($input);
         $flickr = new PhpFlickr($config['consumer_key'], $config['consumer_secret']);
         $accessToken = new StdOAuth1Token();
         $accessToken->setAccessToken($config['access_key']);
         $accessToken->setAccessTokenSecret($config['access_secret']);
         $flickr->getOauthTokenStorage()->storeAccessToken('Flickr', $accessToken);
-        return $flickr;
+        $this->flickr = $flickr;
+        return $this->flickr;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -106,5 +114,29 @@ abstract class CommandBase extends Command
         $this->io->title($this->getApplication()->getLongVersion());
         return 1;
     }
+
+	/**
+	 * Get the hash function name from the user's input.
+	 *
+	 * @param \Symfony\Component\Console\Input\InputInterface $input The input object.
+	 * @return string[] The names of the hash and its function (keys: 'name' and 'function').
+	 * @throws \Exception On an invalid hash name.
+	 */
+	public function getHashInfo(InputInterface $input): array
+	{
+		$hash = $input->getOption('hash');
+
+		if (!in_array($hash, ['md5', 'sha1'])) {
+			throw new Exception($this->msg('invalid-hash', [$hash]));
+		}
+
+		$hashFunction = $hash . '_file';
+
+		if (!function_exists($hashFunction)) {
+			throw new Exception($this->msg('hash-function-not-available', [$hashFunction]));
+		}
+
+		return ['name' => $hash, 'function' => $hashFunction];
+	}
 
 }

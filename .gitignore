@@ -1,6 +1,6 @@
 /vendor/
-/config.yml
-/config.yaml
+/config*.yml
+/config*.yaml
 /tests/tmp/
 /photos/
 

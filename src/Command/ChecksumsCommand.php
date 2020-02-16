@@ -3,6 +3,7 @@
 namespace Samwilson\PhpFlickrCli\Command;
 
 use Exception;
+use Samwilson\PhpFlickr\PhotosApi;
 use Samwilson\PhpFlickr\PhpFlickr;
 use Samwilson\PhpFlickr\Util;
 use Symfony\Component\Console\Input\InputInterface;
@@ -101,7 +102,7 @@ class ChecksumsCommand extends CommandBase
 
         // Download the file.
         $photoInfo = $flickr->photos()->getInfo($photo['id']);
-        $originalUrl = $flickr->buildPhotoURL($photoInfo, 'original');
+        $originalUrl = $flickr->urls()->getImageUrl($photoInfo, PhotosApi::SIZE_ORIGINAL);
         $tmpFilename = $this->tmpDir.'/checksumming.'.$photoInfo['originalformat'];
         $downloaded = copy($originalUrl, $tmpFilename);
         if (false === $downloaded) {
@@ -123,30 +124,6 @@ class ChecksumsCommand extends CommandBase
         }
         $this->io->writeln($this->msg('added-checksum', [$photo['id'], $shortUrl]));
         return $hashTag;
-    }
-
-    /**
-     * Get the hash function name from the user's input.
-     *
-     * @param \Symfony\Component\Console\Input\InputInterface $input The input object.
-     * @return string[] The names of the hash and its function (keys: 'name' and 'function').
-     * @throws \Exception On an invalid hash name.
-     */
-    public function getHashInfo(InputInterface $input): array
-    {
-        $hash = $input->getOption('hash');
-
-        if (!in_array($hash, ['md5', 'sha1'])) {
-            throw new Exception($this->msg('invalid-hash', [$hash]));
-        }
-
-        $hashFunction = $hash . '_file';
-
-        if (!function_exists($hashFunction)) {
-            throw new Exception($this->msg('hash-function-not-available', [$hashFunction]));
-        }
-
-        return ['name' => $hash, 'function' => $hashFunction];
     }
 
 }

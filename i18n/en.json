@@ -46,5 +46,12 @@
   "downloaded-saved-to": "Photos downloaded to: $1",
 
   "command-download-album-desc": "Download an album's photos and compile metadata files according to a template.",
-  "option-album-desc": "The ID of the album to download. Get it from the URL of the album page on Flickr."
+  "option-album-desc": "The ID of the album to download. Get it from the URL of the album page on Flickr.",
+
+  "command-upload-desc": "Upload a file or (recursively) a directory of files.",
+  "argument-source-desc": "The file or directory to upload.",
+  "upload-source-invalid": "The upload source '$1' is not a file or directory.",
+  "upload-photo-exists": "Photo already exists as $1\n  $2",
+  "upload-failed": "Upload failed:\n  File: $1\n  Reason: $2",
+  "upload-succeeded": "Uploaded:\n  File: $1\n  Flickr URL: $2"
 }
