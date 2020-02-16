@@ -41,7 +41,7 @@ citecolor  = black  % Colour of citations
         \caption[{{flickrDate(photo.dates.taken, photo.dates.takengranularity)}}: {{photo.title|e('tex')}}]{
             {{flickrDate(photo.dates.taken, photo.dates.takengranularity)}}: \textbf{ {{photo.title|e('tex')}} }
             {{ photo.description|e('tex') }}
-            {% for tag in photo.tags.tag if not tag.machine_tag %}
+            {% for tag in photo.tags.tag|filter( i => not i.machine_tag ) %}
                 {\small \index{ {{tag.raw|e('tex')}} } \textsc{ {{tag.raw|e('tex')}} } }
             {% endfor %}
             \hfill {\tiny \href{{'{'}}{{photo.shorturl}}{{'}{'}}{{photo.id}}{{'}'}} }

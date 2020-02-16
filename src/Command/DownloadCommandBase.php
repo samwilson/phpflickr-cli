@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Samwilson\PhpFlickrCli\Command;
 
@@ -11,70 +13,77 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class DownloadCommandBase extends CommandBase
 {
+    /** @return string[] */
+    abstract protected function getPhotos(PhpFlickr $flickr, InputInterface $input, int $page) : array;
 
-	/**
-	 * @param PhpFlickr $flickr
-	 * @param InputInterface $input
-	 * @param int $page
-	 * @return string[]
-	 */
-	protected abstract function getPhotos(PhpFlickr $flickr, InputInterface $input, int $page): array;
+    protected function configure(): void
+    {
+        parent::configure();
 
-	protected function configure(): void
-	{
-		parent::configure();
-		$templates = join(', ', Template::getTemplateNames());
-		$this->addOption('template', 't', InputOption::VALUE_OPTIONAL, $this->msg('option-template-desc', [$templates]), 'archive');
-		$defaultDest = dirname(__DIR__, 2) . '/photos';
-		$this->addOption('dest', 'd', InputOption::VALUE_OPTIONAL, $this->msg('option-dest-desc'), $defaultDest);
-	}
+        $templates = implode(', ', Template::getTemplateNames());
+        $this->addOption(
+            'template',
+            't',
+            InputOption::VALUE_OPTIONAL,
+            $this->msg('option-template-desc', [$templates]),
+            'archive'
+        );
+        $defaultDest = dirname(__DIR__, 2) . '/photos';
+        $this->addOption('dest', 'd', InputOption::VALUE_OPTIONAL, $this->msg('option-dest-desc'), $defaultDest);
+    }
 
-	protected function execute(InputInterface $input, OutputInterface $output): int
-	{
-		parent::execute($input, $output);
-		$flickr = $this->getFlickr($input);
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        parent::execute($input, $output);
 
-		// Create the template early, to validate inputs.
-		$dest = $input->getOption('dest');
-		$templateName = $input->getOption('template');
-		$template = new Template($templateName, $dest, $flickr);
+        $flickr = $this->getFlickr($input);
 
-		// Get photos.
-		$page = 1;
-		$allPhotos = [];
-		$this->io->block($this->msg('retrieving-photo-metadata'));
-		$progressBar1 = new ProgressBar($this->io);
-		$progressBar1->start();
-		do {
-			$photos = $this->getPhotos($flickr, $input, $page);
-			$page++;
-			if (0 === (int)$photos['total']) {
-				$this->io->warning($this->msg('no-photos-found'));
-				return 0;
-			}
-			if (!$progressBar1->getMaxSteps()) {
-				$progressBar1->setMaxSteps((int)$photos['total']);
-			}
+        // Create the template early, to validate inputs.
+        $dest = $input->getOption('dest');
+        $templateName = $input->getOption('template');
+        $template = new Template($templateName, $dest, $flickr);
 
-			foreach ($photos['photo'] as $photo) {
-				$allPhotos[] = $flickr->photos()->getInfo($photo['id']);
-				$progressBar1->advance();
-			}
-		} while ((int)$photos['page'] !== (int)$photos['pages']);
-		$progressBar1->finish();
+        // Get photos.
+        $page = 1;
+        $allPhotos = [];
+        $this->io->block($this->msg('retrieving-photo-metadata'));
+        $progressBar1 = new ProgressBar($this->io);
+        $progressBar1->start();
 
-		$this->io->block($this->msg('compiling-output-files'));
+        do {
+            $photos = $this->getPhotos($flickr, $input, $page);
+            $page++;
 
-		$progressBar2 = new ProgressBar($this->io, (int)$photos['total']);
-		$progressBar2->start();
-		$template->setPerPhotoCallback(static function () use ($progressBar2): void {
-			$progressBar2->advance();
-		});
-		$template->render($allPhotos);
-		$progressBar2->finish();
+            if (0 === (int) $photos['total']) {
+                $this->io->warning($this->msg('no-photos-found'));
 
-		$this->io->success($this->msg('downloaded-saved-to', [realpath($dest)]));
-		return 0;
-	}
+                return 0;
+            }
 
+            if (!$progressBar1->getMaxSteps()) {
+                $progressBar1->setMaxSteps((int) $photos['total']);
+            }
+
+            foreach ($photos['photo'] as $photo) {
+                $allPhotos[] = $flickr->photos()->getInfo($photo['id']);
+                $progressBar1->advance();
+            }
+        } while ((int) $photos['page'] !== (int) $photos['pages']);
+
+        $progressBar1->finish();
+
+        $this->io->block($this->msg('compiling-output-files'));
+
+        $progressBar2 = new ProgressBar($this->io, (int) $photos['total']);
+        $progressBar2->start();
+        $template->setPerPhotoCallback(static function () use ($progressBar2) : void {
+            $progressBar2->advance();
+        });
+        $template->render($allPhotos);
+        $progressBar2->finish();
+
+        $this->io->success($this->msg('downloaded-saved-to', [realpath($dest)]));
+
+        return 0;
+    }
 }
