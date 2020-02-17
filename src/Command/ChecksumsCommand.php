@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Samwilson\PhpFlickrCli\Command;
 
 use Exception;
+use GuzzleHttp\Client;
+use GuzzleHttp\RequestOptions;
 use Samwilson\PhpFlickr\PhotosApi;
 use Samwilson\PhpFlickr\PhpFlickr;
 use Symfony\Component\Console\Input\InputInterface;
@@ -66,13 +68,9 @@ class ChecksumsCommand extends CommandBase
 
             $this->io->writeln($this->msg('page-i-of-n', [$page, $photos['pages']]));
 
+            // Process all photos of this page.
             foreach ($photos['photo'] as $photo) {
-                // Process this photo.
-                $hashTag = $this->processPhoto($input, $flickr, $photo);
-
-                if (!$hashTag) {
-                    return 1;
-                }
+                $this->processPhoto($input, $flickr, $photo);
             }
 
             $page++;
@@ -93,10 +91,9 @@ class ChecksumsCommand extends CommandBase
 
     /**
      * @param string[] $photo
-     * @return string|bool The hash machine tag, or false.
      * @throws Exception
      */
-    protected function processPhoto(InputInterface $input, PhpFlickr $flickr, array $photo)
+    protected function processPhoto(InputInterface $input, PhpFlickr $flickr, array $photo): void
     {
         $hashInfo = $this->getHashInfo($input);
         $shortUrl = $flickr->urls()->getShortUrl($photo['id']);
@@ -108,19 +105,26 @@ class ChecksumsCommand extends CommandBase
             // If it's already got a tag, do nothing more.
             $this->io->writeln($this->msg('already-has-checksum', [$photo['id'], $shortUrl]));
 
-            return $matches[1];
+            return;
         }
 
         // Download the file.
         $photoInfo = $flickr->photos()->getInfo($photo['id']);
         $originalUrl = $flickr->urls()->getImageUrl($photoInfo, PhotosApi::SIZE_ORIGINAL);
         $tmpFilename = $this->tmpDir . '/checksumming.' . $photoInfo['originalformat'];
-        $downloaded = copy($originalUrl, $tmpFilename);
-
-        if (false === $downloaded) {
+        $client = new Client();
+        try {
+            $response = $client->get($originalUrl, [RequestOptions::SINK => fopen($tmpFilename, 'w+')]);
+        } catch (Exception $exception) {
             $this->io->error($this->msg('unable-to-download', [$photo['id'], $shortUrl]));
 
-            return false;
+            return;
+        }
+
+        if ($response->getStatusCode() !== 200) {
+            $this->io->error($this->msg('unable-to-download', [$photo['id'], $shortUrl]));
+
+            return;
         }
 
         // Calculate the file's hash, and remove the temporary file.
@@ -139,7 +143,5 @@ class ChecksumsCommand extends CommandBase
         }
 
         $this->io->writeln($this->msg('added-checksum', [$photo['id'], $shortUrl]));
-
-        return $hashTag;
     }
 }

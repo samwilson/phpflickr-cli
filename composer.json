@@ -20,7 +20,8 @@
         "symfony/console": "^4.2|^5.0",
         "symfony/yaml": "^4.2|^5.0",
         "symfony/filesystem": "^4.2|^5.0",
-        "twig/twig": "^3.0"
+        "twig/twig": "^3.0",
+        "guzzlehttp/guzzle": "^6.5"
     },
     "require-dev": {
         "mediawiki/minus-x": "^1.0",
