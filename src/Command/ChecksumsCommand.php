@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Samwilson\PhpFlickrCli\Command;
 
+use DirectoryIterator;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
@@ -77,12 +78,12 @@ class ChecksumsCommand extends CommandBase
         } while ($photos['page'] !== $photos['pages']);
 
         // Clean up the temporary directory.
-        $tmpFiles = scandir($this->tmpDir, SORT_ASC);
-
-        foreach (preg_grep('|^\..*|', $tmpFiles, PREG_GREP_INVERT) as $file) {
-            unlink($file);
+        $di = new DirectoryIterator($this->tmpDir);
+        foreach ($di as $file) {
+            if ($file->isFile() && !$file->isDot()) {
+                unlink($file->getPathname());
+            }
         }
-
         rmdir($this->tmpDir);
         $this->io->success($this->msg('deleted-tmp-dir', [$this->tmpDir]));
 
