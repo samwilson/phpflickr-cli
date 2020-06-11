@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Samwilson\PhpFlickrCli\Command;
 
 use DirectoryIterator;
+use Exception;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -70,7 +71,13 @@ class UploadCommand extends CommandBase
         $hashInfo = $this->getHashInfo($input);
         $fileHash = $hashInfo['function']($filename);
         $tag = 'checksum:' . $hashInfo['name'] . '=' . $fileHash;
-        $search = $flickr->photos()->search(['user_id' => 'me', 'machine_tags' => $tag]);
+        try {
+            $search = $flickr->photos()->search(['user_id' => 'me', 'machine_tags' => $tag]);
+        } catch (Exception $exception) {
+            $this->io->error($this->msg('upload-failed', [$filename, $exception->getMessage()]));
+
+            return;
+        }
 
         if ((int) $search['total'] >= 1) {
             $shortUrl = $flickr->urls()->getShortUrl($search['photo'][0]['id']);
@@ -79,7 +86,13 @@ class UploadCommand extends CommandBase
             return;
         }
 
-        $result = $flickr->uploader()->upload($filename, null, null, $tag);
+        try {
+            $result = $flickr->uploader()->upload($filename, null, null, $tag);
+        } catch (Exception $exception) {
+            $this->io->error($this->msg('upload-failed', [$filename, $exception->getMessage()]));
+
+            return;
+        }
 
         if ('fail' === $result['stat']) {
             $this->io->error($this->msg('upload-failed', [$filename, $result['message']]));
