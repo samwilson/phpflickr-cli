@@ -16,17 +16,22 @@
     },
     "require": {
         "krinkle/intuition": "^2.1",
-        "samwilson/phpflickr": "^4.7",
-        "symfony/console": "^4.2|^5.0",
-        "symfony/yaml": "^4.2|^5.0",
-        "symfony/filesystem": "^4.2|^5.0",
-        "twig/twig": "^3.0",
+        "samwilson/phpflickr": "^5.1",
+        "symfony/console": "^6.4|^7.0",
+        "symfony/yaml": "^6.4|^7.0",
+        "symfony/filesystem": "^6.4|^7.0",
+        "twig/twig": "^3.10",
         "guzzlehttp/guzzle": "^6.5"
     },
     "require-dev": {
         "mediawiki/minus-x": "^1.0",
         "phpunit/phpunit": "^7.0|^8.0",
-        "symfony/var-dumper": "^5.0",
-        "opsway/psr12-strict-coding-standard": "^0.3.0"
+        "symfony/var-dumper": "^6.4|^7.0",
+        "opsway/psr12-strict-coding-standard": "^1.1"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }
