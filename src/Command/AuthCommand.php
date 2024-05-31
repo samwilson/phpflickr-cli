@@ -83,7 +83,7 @@ final class AuthCommand extends CommandBase
             $this->io->block($this->msg('authorization-required'));
             $url = $flickr->getAuthUrl($this->getPermissionType());
             $this->io->block($this->msg('go-to-auth-url', [$this->getApplication()->getName()]));
-            $this->io->writeln($url);
+            $this->io->writeln((string)$url);
             // Flickr says, at this point:
             // "You have successfully authorized the application XYZ to use your credentials.
             // You should now type this code into the application:"
