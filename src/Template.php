@@ -37,6 +37,9 @@ class Template
     /** @var string */
     protected $templateDirectory;
 
+    /** @var Environment */
+    private $twig;
+
     public function __construct(string $templateName, string $destDir, PhpFlickr $flickr)
     {
         $this->flickr = $flickr;

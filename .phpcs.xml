@@ -2,6 +2,7 @@
 <ruleset name="PhpFlickr">
     <file>.</file>
     <exclude-pattern>vendor/</exclude-pattern>
+    <exclude-pattern>.phan/baseline.php</exclude-pattern>
     <rule ref="OpsWayStrictPSR12CodingStandard">
         <exclude name="WebimpressCodingStandard.NamingConventions.AbstractClass.Prefix" />
         <exclude name="WebimpressCodingStandard.PHP.ImportInternalFunction.Import" />
