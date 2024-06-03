@@ -16,17 +16,33 @@
     },
     "require": {
         "krinkle/intuition": "^2.1",
-        "samwilson/phpflickr": "^4.7",
-        "symfony/console": "^4.2|^5.0",
-        "symfony/yaml": "^4.2|^5.0",
-        "symfony/filesystem": "^4.2|^5.0",
+        "samwilson/phpflickr": "^5",
+        "symfony/console": "^5|^6|^7",
+        "symfony/yaml": "^5|^6|^7",
+        "symfony/filesystem": "^5|^6|^7",
         "twig/twig": "^3.0",
         "guzzlehttp/guzzle": "^6.5"
     },
     "require-dev": {
         "mediawiki/minus-x": "^1.0",
         "phpunit/phpunit": "^7.0|^8.0",
-        "symfony/var-dumper": "^5.0",
-        "opsway/psr12-strict-coding-standard": "^0.3.0"
+        "symfony/var-dumper": "^5|^6|^7",
+        "opsway/psr12-strict-coding-standard": "^1"
+    },
+    "scripts": {
+        "test": [
+                "composer validate",
+                "minus-x check . -q",
+                "phpcs -sp",
+                "git status | grep 'nothing to commit, working tree clean'"
+        ]
+    },
+    "config": {
+        "platform": {
+            "php": "8.0"
+        },
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }
