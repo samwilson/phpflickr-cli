@@ -8,19 +8,9 @@
  * (can be combined with --load-baseline)
  */
 return [
-    // # Issue statistics:
-    // PhanTypeMismatchArgument : 9 occurrences
-    // PhanDeprecatedFunction : 1 occurrence
-    // PhanTypeMismatchForeach : 1 occurrence
-
-    // Currently, file_suppressions and directory_suppressions are the only supported suppressions
     'file_suppressions' => [
-        'src/Command/AuthCommand.php' => ['PhanTypeMismatchArgument'],
         'src/Command/ChecksumsCommand.php' => ['PhanTypeMismatchArgument'],
-        'src/Command/CommandBase.php' => ['PhanTypeMismatchArgument'],
         'src/Command/DownloadCommandBase.php' => ['PhanTypeMismatchForeach'],
         'src/Template.php' => ['PhanDeprecatedFunction'],
     ],
-    // 'directory_suppressions' => ['src/directory_name' => ['PhanIssueName1', 'PhanIssueName2']] can be manually added if needed.
-    // (directory_suppressions will currently be ignored by subsequent calls to --save-baseline, but may be preserved in future Phan releases)
 ];
