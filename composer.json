@@ -21,12 +21,12 @@
         "symfony/yaml": "^5|^6|^7",
         "symfony/filesystem": "^5|^6|^7",
         "twig/twig": "^3.0",
-        "guzzlehttp/guzzle": "^6.5"
+        "guzzlehttp/guzzle": "^6|^7"
     },
     "require-dev": {
         "mediawiki/minus-x": "^1.0",
         "phan/phan": "^5.4",
-        "phpunit/phpunit": "^7.0|^8.0",
+        "phpunit/phpunit": "^7.0|^8.0|^9",
         "symfony/var-dumper": "^5|^6|^7",
         "opsway/psr12-strict-coding-standard": "^1"
     },
