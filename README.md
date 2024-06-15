@@ -22,7 +22,7 @@ Get the code and install dependencies:
 
 Run the app:
 
-    phpflickr-cli --help
+    ./phpflickr-cli --help
 
 ## Upgrading
 
@@ -39,7 +39,7 @@ This will create a `config.yml` file containing your access codes; keep it safe.
 
 To download photos, specify where you want them to end up and a template:
 
-    phpflickr-cli download --dest=<path> --template=<template_name>
+    ./phpflickr-cli download --dest=<path> --template=<template_name>
 
 Download templates are sets of Twig template files,
 one for each of the following purposes:
@@ -52,7 +52,7 @@ Have a look at the included templates for more ideas on what they can do.
 
 Add MD5 or SHA1 checksum machine tags to images:
 
-    phpflickr-cli checksums --help
+    ./phpflickr-cli checksums --help
 
 Requires authorization.
 
