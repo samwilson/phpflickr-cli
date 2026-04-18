@@ -25,7 +25,7 @@
     },
     "require-dev": {
         "mediawiki/minus-x": "^1.0",
-        "phan/phan": "^5.4",
+        "phan/phan": "^6",
         "phpunit/phpunit": "^7.0|^8.0|^9",
         "symfony/var-dumper": "^5|^6|^7",
         "opsway/psr12-strict-coding-standard": "^1"
