@@ -3,7 +3,7 @@ PhpFlickr CLI
 
 This is a command-line interface (CLI) to Flickr, written in PHP, using the [samwilson/phpflickr](https://github.com/samwilson/phpflickr) library.
 
-[![Build status](https://travis-ci.org/samwilson/phpflickr-cli.svg)](https://travis-ci.org/samwilson/phpflickr-cli)
+[![CI](https://github.com/samwilson/phpflickr-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/samwilson/phpflickr-cli/actions/workflows/ci.yml)
 
 Features:
 
