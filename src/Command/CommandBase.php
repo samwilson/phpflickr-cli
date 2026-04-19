@@ -99,7 +99,7 @@ abstract class CommandBase extends Command
     }
 
     /**
-     * @return string[]
+     * @return mixed[]
      */
     protected function getConfig(InputInterface $input): array
     {

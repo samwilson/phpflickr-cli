@@ -25,6 +25,7 @@ class ChecksumsCommand extends CommandBase
         parent::configure();
 
         $this->setDescription($this->msg('command-checksums-desc'));
+
         $this->addOption('hash', null, InputOption::VALUE_OPTIONAL, $this->msg('option-hash-desc'), 'md5');
     }
 
