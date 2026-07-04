@@ -24,7 +24,7 @@
         "guzzlehttp/guzzle": "^6|^7"
     },
     "require-dev": {
-        "mediawiki/minus-x": "^1.0",
+        "mediawiki/minus-x": "^2.0",
         "phan/phan": "^6",
         "phpunit/phpunit": "^7.0|^8.0|^9",
         "symfony/var-dumper": "^5|^6|^7",
